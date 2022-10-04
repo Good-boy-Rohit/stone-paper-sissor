@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rock paper sissor</title>
+    <style>
+        html,body{
+            margin: 0%;
+            padding: 0%;
+            box-sizing: border-box;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+        img{
+            position: absolute;
+        }
+        #score{
+            position: absolute;
+            top: 20px;
+        }
+        .land #out{
+            right: 0;
+            top: 0;
+            width: 50vw;
+            height: 100vh;
+        }
+        .land #ai{
+            left: 0;
+            top: 0;
+            width: 50vw;
+            height: 100vh;
+        }
+        .land .button{
+            bottom: 15px;
+            height: 10vh;
+        }
+        .land #buttonr{
+            left: 15px;
+        }
+        .land #buttons{
+            right: 15px;
+        }
+        .land #score{
+            font-size: 5vh;
+        }
+        .port #out{
+            left: 0;
+            bottom: 0;
+            width: 100vw;
+            height: 50vh;
+        }
+        .port #ai{
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 50vh;
+        }
+        .port .button{
+            bottom: 15px;
+            height: 10vw;
+        }
+        .port #buttonr{
+            left: 15px;
+        }
+        .port #buttons{
+            right: 15px;
+        }
+        .port #score{
+            font-size: 5vh;
+        }
+    </style>
+</head>
+<body class="land">
+    <img src="rock.png" alt="" id="out">
+    <img src="rock.png" alt="" id="ai">
+    <img src="rock.png" alt="" id="buttonr" class="button">
+    <img src="paper.png" alt="" id="buttonp" class="button">
+    <img src="sissor.png" alt="" id="buttons" class="button">
+    <span id="score">AI:0/0:U </span>
+</body>
+<script>
+onload = () => {
+    let out = document.getElementById("out")
+    let ai = document.getElementById("ai")
+    let buttonr = document.getElementById("buttonr")
+    let buttonp = document.getElementById("buttonp")
+    let buttons = document.getElementById("buttons")
+    let scrtxt = document.getElementById("score")
+    let body = document.getElementsByTagName("body")[0]
+    let choice = "rock";
+    let aiscore = 0, usrscore = 0;
+    let canclick = true;
+    let reloadclicks = 0;
+    let firsreloadclick = true;
+
+    function setsize(){
+        if(innerWidth<innerHeight){
+            body.setAttribute("class", "port")
+        } else {
+            body.setAttribute("class", "land")
+
+        }
+        buttonp.style.left = ``
+        scrtxt.style.left = ``
+        buttonp.style.left = `${Math.floor(innerWidth/2-buttonp.clientWidth/2)}px`
+        scrtxt.style.left = `${Math.floor(innerWidth/2-scrtxt.clientWidth/2)}px`
+    }
+    setsize()
+    onresize = setsize;    
+
+
+    function processinp(){
+        out.setAttribute("src",`${choice}.png`)
+        let aicimg = choice;
+        while(aicimg==choice){
+            let aic = Math.floor(Math.random()*3+1)
+            if(aic==4) aic=3;
+            switch (aic) {
+                case 1:
+                    aicimg = "rock";
+                    break;
+            
+                case 2:
+                    aicimg = "paper";
+                    break;
+            
+                case 3:
+                    aicimg = "sissor";
+                    break;
+            
+            }
+        }
+        ai.setAttribute("src", `${aicimg}.png`)
+        if(aicimg=="rock" && choice=="paper"){
+            usrscore++;                        
+        }
+        else if(aicimg=="paper" && choice=="sissor"){
+            usrscore++;                    
+        }
+        else if(aicimg=="sissor" && choice=="rock"){
+            usrscore++;                    
+        }
+        else if(aicimg=="rock" && choice=="sissor"){
+            aiscore++;                        
+        }
+        else if(aicimg=="paper" && choice=="rock"){
+            aiscore++;                    
+        }
+        else if(aicimg=="sissor" && choice=="paper"){
+            aiscore++;                    
+        }
+        scrtxt.innerText = `AI:${aiscore}/${usrscore}:U`;
+    }
+
+    onkeyup = e =>{
+        if(!canclick) return;
+        canclick=false;
+        out.style.filter = "invert(0)"
+        setTimeout(()=>{canclick=true;out.style.filter = "invert(1)";}, 2000);
+        switch (e.key) {
+            case "1":
+                choice = "rock";
+                break;
+        
+            case "2":
+                choice = "paper";
+                break;
+        
+            case "3":
+                choice = "sissor";
+                break;
+        
+        }
+        if(e.key=="1"||e.key=="2"||e.key=="3")processinp();
+    }
+    buttonr.onclick = () =>{
+        if(!canclick) return;
+        canclick=false;
+        out.style.filter = "invert(0)"
+        setTimeout(()=>{canclick=true;out.style.filter = "invert(1)"}, 2000);
+        choice="rock";
+        processinp();
+    }
+    buttonp.onclick = () =>{
+        if(!canclick) return;
+        canclick=false;
+        out.style.filter = "invert(0)"
+        setTimeout(()=>{canclick=true;out.style.filter = "invert(1)"}, 2000);
+        choice="paper";
+        processinp();
+    }
+    buttons.onclick = () =>{
+        if(!canclick) return;
+        canclick=false;
+        out.style.filter = "invert(0)"
+        setTimeout(()=>{canclick=true;out.style.filter = "invert(1)"}, 2000);
+        choice="sissor";
+        processinp();
+    }
+    onclick = () =>{
+        if(firsreloadclick){
+            firsreloadclick = false;
+            setTimeout(() => {
+                if(reloadclicks >= 7){
+                    location.reload()
+                }
+                firsreloadclick = true;
+                reloadclicks = 0;
+            }, 3500);
+        }
+        reloadclicks++;
+    }
+}
+
+</script>
+</html>
